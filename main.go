@@ -15,18 +15,24 @@ import (
 func handleCase4(args []string) {
 	switch args[1] {
 	case "generate":
-		println("generate")
+		if args[2] != "crud" && args[2] != "service" {
+			helpers.ShowHelp()
+			return
+		}
 		helpers.HandleGenerate(args)
+	default:
+		helpers.ShowHelp()
 	}
 }
+
 func handleCase3(args []string) {
 	switch args[1] {
 	case "new":
 		initProject(&args[2])
 	case "update":
 		if args[2] != "env" {
-			fmt.Fprintf(os.Stderr, "Usage: %s <project_name> [new|generate]\n", os.Args[0])
-			os.Exit(1)
+			helpers.ShowHelp()
+			return
 		}
 		err := helpers.UpdateEnvGo()
 		if err != nil {
@@ -36,11 +42,10 @@ func handleCase3(args []string) {
 	case "setup":
 		helpers.HandleSetup(args)
 	default:
-		fmt.Fprintf(os.Stderr, "Usage: %s <project_name> [new|generate]\n", os.Args[0])
-		os.Exit(1)
+		helpers.ShowHelp()
 	}
-
 }
+
 func initProject(outputDir *string) {
 	// Define flags to customize the output directory and file name.
 
@@ -87,16 +92,19 @@ func initProject(outputDir *string) {
 	fmt.Printf("Go module initialized in %s with module name \n", *outputDir)
 	fmt.Printf("Basic Gin server code generated in %s\n", *outputDir)
 }
+
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Fprintf(os.Stderr, "Usage: %s <project_name>\n", os.Args[0])
-		os.Exit(1)
+		helpers.ShowHelp()
+		return
 	}
+
 	switch len(os.Args) {
 	case 3:
 		handleCase3(os.Args)
 	case 4:
 		handleCase4(os.Args)
+	default:
+		helpers.ShowHelp()
 	}
-
 }
