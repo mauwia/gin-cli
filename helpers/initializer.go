@@ -46,6 +46,19 @@ func WriteFile(outputDir *string, outputPath string, templ func(string) string) 
 		os.Exit(1)
 	}
 }
+func WriteCrudFile(outputDir *string, projectName *string, outputPath string, templ func(string, string) string) {
+	f, _ := os.Create(outputPath)
+	tmpl, err := template.New("server").Parse(templ(*outputDir, *projectName))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Failed to parse template: %v\n", err)
+		os.Exit(1)
+	}
+
+	if err := tmpl.Execute(f, nil); err != nil {
+		fmt.Fprintf(os.Stderr, "Failed to write to file: %v\n", err)
+		os.Exit(1)
+	}
+}
 func CreateFolder(finalOutputDir string) {
 	err := os.MkdirAll(finalOutputDir, 0755)
 	if err != nil {

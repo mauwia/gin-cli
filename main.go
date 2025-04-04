@@ -7,6 +7,7 @@ import (
 
 	"github.com/mauwia/gin-cli/helpers"
 	"github.com/mauwia/gin-cli/templates"
+	configTemplates "github.com/mauwia/gin-cli/templates/config"
 )
 
 // Define a template for a basic Gin server.
@@ -51,12 +52,11 @@ func initProject(outputDir *string) {
 
 	// Use the executable directory as the base for the output directory.
 	helpers.CreateFolder(filepath.Join(cwd, *outputDir))
-	helpers.CreateFolder(filepath.Join(cwd, *outputDir, "cmd"))
 	helpers.CreateFolder(filepath.Join(cwd, *outputDir, "config"))
 	helpers.CreateFolder(filepath.Join(cwd, *outputDir, "internal"))
 	helpers.CreateFolder(filepath.Join(cwd, *outputDir, "migrations"))
 	helpers.CreateFolder(filepath.Join(cwd, *outputDir, "internal", "server"))
-	helpers.CreateFolder(filepath.Join(cwd, *outputDir, "internal", "handlers"))
+	helpers.CreateFolder(filepath.Join(cwd, *outputDir, "internal", "controllers"))
 	helpers.CreateFolder(filepath.Join(cwd, *outputDir, "internal", "models"))
 	helpers.CreateFolder(filepath.Join(cwd, *outputDir, "internal", "services"))
 	helpers.CreateFolder(filepath.Join(cwd, *outputDir, "internal", "repositories"))
@@ -75,17 +75,17 @@ func initProject(outputDir *string) {
 	// Create the output file.
 
 	// Parse and execute the template, writing the contents to the file.
-	helpers.WriteFile(outputDir, filepath.Join(*outputDir, ".env"), templates.ENVTemplate)
+	helpers.WriteFile(outputDir, filepath.Join(*outputDir, ".env"), configTemplates.ENVTemplate)
 
 	helpers.WriteFile(outputDir, filepath.Join(*outputDir, "main.go"), templates.MainTemplate)
 	helpers.WriteFile(outputDir, filepath.Join(*outputDir, "internal", "server", "server.go"), templates.ServerTemplate)
 	helpers.WriteFile(outputDir, filepath.Join(*outputDir, "internal", "server", "router.go"), templates.RouterTemplate)
-	helpers.WriteFile(outputDir, filepath.Join(*outputDir, "config", "config.go"), templates.ConfigTemplate)
+	helpers.WriteFile(outputDir, filepath.Join(*outputDir, "config", "config.go"), configTemplates.ConfigTemplate)
 
 	helpers.InitGin(outputDir)
 
 	fmt.Printf("Go module initialized in %s with module name \n", *outputDir)
-	fmt.Printf("Basic Gin server code generated in")
+	fmt.Printf("Basic Gin server code generated in %s\n", *outputDir)
 }
 func main() {
 	if len(os.Args) < 2 {

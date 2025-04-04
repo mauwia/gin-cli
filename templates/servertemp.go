@@ -18,7 +18,8 @@ type Server struct {
 
 func NewServer() *Server {
 	r := gin.Default()
-	SetupRoutes(r)
+	cfg := config.LoadConfig()
+	SetupRoutes(r, cfg)
 
 	return &Server{router: r}
 }

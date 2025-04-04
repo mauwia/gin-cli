@@ -1,16 +1,17 @@
 package templates
 
-// ServerTemplate returns the basic Gin server code as a string.
-// It replaces the placeholder with the provided module name.
+import "fmt"
+
 func RouterTemplate(moduleName string) string {
-	return `package server
+	return fmt.Sprintf(`package server
 
 import (
 	"github.com/gin-gonic/gin"
+	"%s/config"
 )
 
 // setupRoutes initializes the routes
-func SetupRoutes(r *gin.Engine) {
+func SetupRoutes(r *gin.Engine,cfg *config.AppConfig) {
 	api := r.Group("/api")
 	{
 		api.GET("/ping", pingHandler)
@@ -25,5 +26,5 @@ func pingHandler(c *gin.Context) {
 }
 
 
-`
+`, moduleName)
 }
